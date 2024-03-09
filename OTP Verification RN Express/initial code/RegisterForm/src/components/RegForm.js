@@ -7,10 +7,11 @@ export default function RegForm({ navigation }) {
     const [phoneNumber, setPhoneNumber] = useState("+381690156360")
     const [password, setPassword] = useState("12345678")
 
-    const signUp = async () => {
+    const onSignUpClick = async () => {
         try {
             const result = await fetch("http://192.168.1.81:2000/register", {
                 method: "POST",
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     email, phoneNumber, password
                 })
@@ -52,7 +53,7 @@ export default function RegForm({ navigation }) {
 
         <TouchableOpacity
             style={styles.button}
-            onPress={signUp}>
+            onPress={onSignUpClick}>
             <Text style={styles.btntext}>Sign up</Text>
         </TouchableOpacity>
     </View>

@@ -11,6 +11,7 @@ export default function RegForm({ navigation }) {
         try {
             const result = await fetch("http://192.168.1.81:2000/register", {
                 method: "POST",
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     email, phoneNumber, password
                 })
