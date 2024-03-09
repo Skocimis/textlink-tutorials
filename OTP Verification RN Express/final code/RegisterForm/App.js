@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import RegisterScreen from './src/screens/RegisterScreen';
 import DashboardScreen from './src/screens/DashboardScreen';
 import { NavigationContainer } from '@react-navigation/native';
+import VerificationForm from './src/screens/VerificationForm';
 
 const Stack = createStackNavigator();
 
@@ -15,6 +16,7 @@ export default function App() {
     }}>
       <Stack.Screen name="Register" component={RegisterScreen} />
       <Stack.Screen name="Dashboard" component={DashboardScreen} />
+      <Stack.Screen name="VerificationForm" component={VerificationForm} />
     </Stack.Navigator>
   </NavigationContainer>
 

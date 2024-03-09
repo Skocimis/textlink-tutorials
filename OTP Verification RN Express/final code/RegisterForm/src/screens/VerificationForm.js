@@ -2,23 +2,21 @@ import { useState } from "react";
 import React from "react";
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert } from "react-native";
 
-export default function RegForm({ navigation }) {
-    const [email, setEmail] = useState("my.email@gmail.com")
-    const [phoneNumber, setPhoneNumber] = useState("+381690156360")
-    const [password, setPassword] = useState("12345678")
+export default function VerificationForm({ navigation }) {
+    const [code, setCode] = useState("")
 
     const onSignUpClick = async () => {
         try {
-            const result = await fetch("http://192.168.1.81:2000/verify", {
+            const result = await fetch("http://192.168.1.81:2000/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    phoneNumber
+                    email, phoneNumber, password
                 })
             })
             const data = await result.json();
             if (data.success) {
-                navigation.navigate("VerificationForm", { email, phoneNumber, password })
+                navigation.navigate("Dashboard")
             }
             else {
                 console.log(data);
@@ -32,23 +30,12 @@ export default function RegForm({ navigation }) {
     }
 
     return <View style={styles.regform}>
-        <Text style={styles.header}>Registration</Text>
+        <Text style={styles.header}>Phone Verification</Text>
 
         <TextInput style={styles.textinput}
-            placeholder="Email"
-            value={email}
-            onChangeText={setEmail}
-        ></TextInput>
-        <TextInput style={styles.textinput}
-            placeholder="Phone number"
-            value={phoneNumber}
-            onChangeText={setPhoneNumber}
-        ></TextInput>
-        <TextInput style={styles.textinput}
-            placeholder="Password"
-            secureTextEntry={true}
-            value={password}
-            onChangeText={setPassword}
+            placeholder="Code"
+            value={code}
+            onChangeText={setCode}
         ></TextInput>
 
         <TouchableOpacity
@@ -61,6 +48,11 @@ export default function RegForm({ navigation }) {
 
 const styles = StyleSheet.create({
     regform: {
+        flex: 1,
+        justifyContent: "center",
+        backgroundColor: "#36485f",
+        paddingLeft: 60,
+        paddingRight: 60,
         alignSelf: "stretch"
     },
     header: {
