@@ -1,10 +1,7 @@
 const express = require('express');
 var bodyParser = require('body-parser')
 const cors = require('cors');
-
-
 const app = express();
-
 app.use(cors());
 
 class User {
@@ -22,7 +19,6 @@ class User {
         return true;
     }
 }
-
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -35,5 +31,4 @@ app.post("/register", (req, res) => {
 
     return res.status(400).json({ success: false });
 })
-
 app.listen(2000);
