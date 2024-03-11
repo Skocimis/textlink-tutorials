@@ -1,8 +1,11 @@
 const express = require('express');
 var bodyParser = require('body-parser')
-const cors = require('cors');
+const textlink = require("textlink-sms")
+const cors = require("cors")
+
+textlink.useKey("YZ1doUiDKiRNVZBu5pSgFFTYfjQwllWeYe3nPUZjVtuqiWVTGz0rd4fuMUAQWhML");
+
 const app = express();
-app.use(cors());
 
 class User {
     static list = {}
@@ -19,16 +22,34 @@ class User {
         return true;
     }
 }
+
 app.use(bodyParser.json())
+app.use(cors())
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.post("/register", (req, res) => {
-    console.log("POSTT");
-    const { email, phoneNumber, password } = req.body
+app.post("/register", async (req, res) => {
+    const { email, phoneNumber, password, code } = req.body
+
+    const result = await textlink.verifyCode(phoneNumber, code);
+
+    if (!result.ok)
+        return res.status(400).json({ success: false });
 
     if (User.add(email, phoneNumber, password))
         return res.status(200).json({ success: true });
 
     return res.status(400).json({ success: false });
 })
+
+app.post("/verify", async (req, res) => {
+    const { phoneNumber } = req.body
+
+    const result = await textlink.sendVerificationSMS(phoneNumber);
+
+    if (result.ok) // Send code here
+        return res.status(200).json({ success: true });
+
+    return res.status(400).json({ success: false });
+})
+
 app.listen(2000);

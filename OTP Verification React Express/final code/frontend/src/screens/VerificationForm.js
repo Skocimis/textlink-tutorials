@@ -1,25 +1,26 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
-export default function RegForm() {
-    const [email, setEmail] = useState("my.email@gmail.com");
-    const [phoneNumber, setPhoneNumber] = useState("+381690156360");
-    const [password, setPassword] = useState("12345678");
+export default function VerificationForm() {
+    const location = useLocation();
+    const [code, setCode] = useState("");
+    const { email, phoneNumber, password } = location.state || {};
 
-    const navigate = useNavigate(); 
+    const navigate = useNavigate();
 
     const onSignUpClick = async () => {
         try {
-            const result = await fetch("http://localhost:2000/verify", {
+            const result = await fetch("http://localhost:2000/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    phoneNumber
+                    email, phoneNumber, password, code
                 })
             });
             const data = await result.json();
             if (data.success) {
-                navigate("/verification", { state: { email, phoneNumber, password } });
+                navigate("/dashboard", { prop1: 2 });
             } else {
                 console.log(data);
                 alert("Error: Could not sign up");
@@ -33,30 +34,18 @@ export default function RegForm() {
 
     return (
         <div style={styles.regform}>
-            <h1 style={styles.header}>Registration</h1>
+            <h1 style={styles.header}>Verify phone number</h1>
+            <p>Enter the verification code below</p>
             <input
                 style={styles.textinput}
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-            />
-            <input
-                style={styles.textinput}
-                placeholder="Phone number"
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
-            />
-            <input
-                style={styles.textinput}
-                placeholder="Password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Verification code"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
             />
             <button
                 style={styles.button}
                 onClick={onSignUpClick}>
-                Sign up
+                Continue
             </button>
         </div>
     );
@@ -64,7 +53,14 @@ export default function RegForm() {
 
 const styles = {
     regform: {
-        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: "column",
+        height: '100vh',
+        backgroundColor: '#36485f',
+        paddingLeft: '60px',
+        paddingRight: '60px',
     },
     header: {
         fontSize: '24px',
@@ -74,7 +70,7 @@ const styles = {
         borderBottom: '1px solid #199187',
     },
     textinput: {
-        width: '100%',
+        width: '20%',
         height: '40px',
         marginBottom: '30px',
         color: '#fff',
@@ -84,7 +80,7 @@ const styles = {
     },
     button: {
         display: 'inline-block',
-        width: '100%',
+        width: '20%',
         padding: '20px',
         backgroundColor: '#59cbbd',
         color: '#fff',
